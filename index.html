@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2. Atributos</title>
+</head>
+
+<body>
+    <div>
+        <h1>Palindromo Doble</h1>
+    </div>
+    <div>
+        <form id="form1">
+            <label for="A">A: </label>
+            <input id="A" type="number" placeholder="Introduzca A">
+            <input type="submit" value="calcular">
+        </form>
+    </div>
+    <!-- Solucion mas rapida en vez de hacer una tabla -->
+    <span id="res">
+    </span>
+    <script>
+        (function () {
+            const App = {
+                htmlElements: {
+                    form1: document.getElementById('form1'),
+                    A: document.getElementById('A'),
+                    res: document.getElementById('res'),
+                },
+                init: () => {
+                    App.bindEvents();
+                },
+                bindEvents: () => {
+                    App.htmlElements.form1.addEventListener('submit', App.Methods.onSubmitFormulario);
+                },
+                Methods: {
+                    onSubmitFormulario: (e) => {
+                        e.preventDefault();
+
+                        const A = parseInt(App.htmlElements.A.value);
+                        let decPal, binPal, binary;
+
+                        decPal = App.Methods.isPalindrome(A.toString());
+
+                        try {
+                            binary = App.Methods.decToBase(A, 2);
+                            binPal = App.Methods.isPalindrome(binary.toString());
+                        }
+                        catch (err) {
+                            binary = "NaN";
+                            binPal = false;
+                        }
+
+                        App.htmlElements.res.innerHTML = `dec:${A} pal:${decPal}<br/>
+                                                          bin:${binary} pal:${binPal}<br/>
+                                                          PalindromeDoble? =${decPal && binPal}`;
+                        // App.htmlElements.res.innerHTML = `${A}! = ${(App.Methods.calculaPalindromo) ? "Es Palindromo Doble" : "No es Palindromo Doble"}`;
+                    },
+                    //solo accepta base 2 y 8, nada mas queria hacer algo generalizado. seguramente puede con cualquier valor pero no quiero agregar un switch statement
+                    decToBase: (dec, base) => {
+                        let result = "";
+                        let nextVal = parseInt(dec);
+                        while (nextVal >= base) {
+                            result = (nextVal % base).toString() + result;
+                            nextVal = parseInt(nextVal / base);
+                        }
+                        result = nextVal + result;
+                        return result;
+                    },
+                    isPalindrome: (val) => {
+                        if (val.length != 1) {
+                            let len = val.length + ((val.length % 2 == 0) ? 0 : - 1);
+                            for (let i = 0; i < len / 2; i++) {
+                                if (val.charAt(i) !== val.charAt((val.length - 1) - 1 * i)) {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                },
+
+            };
+            App.init();
+        })();
+    </script>
+</body>
+
+</html>
