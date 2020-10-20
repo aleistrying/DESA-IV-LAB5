@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2. Atributos</title>
+    <title>Lab 5 Palindromo Doble</title>
 </head>
 
 <body>
@@ -13,9 +13,9 @@
     </div>
     <div>
         <form id="form1">
-            <label for="A">A: </label>
-            <input id="A" type="number" placeholder="Introduzca A">
-            <input type="submit" value="calcular">
+            <label for="N">N: </label>
+            <input id="N" type="number" placeholder="Introduzca N">
+            <button type="submit" value="calcular">Calcular</button>
         </form>
     </div>
     <!-- Solucion mas rapida en vez de hacer una tabla -->
@@ -26,7 +26,7 @@
             const App = {
                 htmlElements: {
                     form1: document.getElementById('form1'),
-                    A: document.getElementById('A'),
+                    N: document.getElementById('N'),
                     res: document.getElementById('res'),
                 },
                 init: () => {
@@ -39,23 +39,32 @@
                     onSubmitFormulario: (e) => {
                         e.preventDefault();
 
-                        const A = parseInt(App.htmlElements.A.value);
-                        let decPal, binPal, binary;
-
-                        decPal = App.Methods.isPalindrome(A.toString());
-
+                        const N = parseInt(App.htmlElements.N.value);
                         try {
-                            binary = App.Methods.decToBase(A, 2);
-                            binPal = App.Methods.isPalindrome(binary.toString());
+                            if (N > 100 || N < 1) throw new Error("Fuera de rango. Rango: 1-100");
+
+                            let decPal, binPal, binary;
+
+                            decPal = App.Methods.isPalindrome(N.toString());
+
+                            try {
+                                binary = App.Methods.decToBase(N, 2);
+                                binPal = App.Methods.isPalindrome(binary.toString());
+                            }
+                            catch (err) {
+                                binary = "NaN"; 
+                            }
+                            App.htmlElements.res.innerHTML = `valor en dec:${N}, es pal? ${decPal}<br/>
+                                                          valor en bin:${binary}, es pal? ${binPal}<br/>
+                                                          es PalindromeDoble? ${decPal && binPal}`;
+
                         }
                         catch (err) {
-                            binary = "NaN";
-                            binPal = false;
+                            console.log(err);
+                            App.htmlElements.res.innerHTML = `${err}`;
+
                         }
 
-                        App.htmlElements.res.innerHTML = `dec:${A} pal:${decPal}<br/>
-                                                          bin:${binary} pal:${binPal}<br/>
-                                                          PalindromeDoble? =${decPal && binPal}`;
                         // App.htmlElements.res.innerHTML = `${A}! = ${(App.Methods.calculaPalindromo) ? "Es Palindromo Doble" : "No es Palindromo Doble"}`;
                     },
                     //solo accepta base 2 y 8, nada mas queria hacer algo generalizado. seguramente puede con cualquier valor pero no quiero agregar un switch statement
